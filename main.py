@@ -1,9 +1,12 @@
 import pyfiglet
 import socket
+import subprocess
+import re
 from colorama import init, Fore
-from modules.network import get_information_network, get_network
+from modules.network import get_information_network, get_network, get_gateway
 from modules.devices import scan_devices
 from modules.ports import scanner_ports
+from modules.router import get_router_information
 
 init(autoreset = True)
 
@@ -97,7 +100,13 @@ def main ():
         elif opcion == "3":
             get_information_network ()
         elif opcion == "4":
-            print("\n[+] Router module coming soon...")
+            print("\n[*] Obtaining router information....")
+
+            gateway = get_gateway()
+            if gateway != "Not found":
+                get_router_information(gateway)
+            else:
+                print("[!] Gateway not found.")
         elif opcion == "0":
             print("\n[+] Closing RouterJO...")
             break
