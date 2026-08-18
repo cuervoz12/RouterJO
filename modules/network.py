@@ -3,6 +3,69 @@ import psutil
 import subprocess
 import ipaddress
 
+def ping_test (ip):
+
+    print("\n========== PING TEST ==========\n")
+
+    print(f"[*] Target: {ip}\n")
+    result = subprocess.run(["ping", "-n", "4", ip], capture_output= True, text= True)
+    print(result.stdout)
+    if result.returncode == 0:
+        print("[+] Host is reachable.")
+    else:
+        print("[!] Host is unreachable.")
+    print("\n================================")
+
+def dns_lookup():
+
+    print("\n========== DNS LOOKUP ==========\n")
+
+    hostname = input("Enter hostname: ").strip()
+    if not hostname:
+        print("\n[!] Hostname cannot be empty.")
+        print("\n================================")
+        return
+    if "." not in hostname:
+        hostname += ".com"
+    try:
+        addresses = socket.getaddrinfo(hostname, None, socket.AF_UNSPEC, socket.SOCK_STREAM)
+        ips = sorted(set(address[4][0] for address in addresses))
+        print(f"\nHostname : {hostname}")
+        print("IP Addresses:")
+
+        for ip in ips:
+
+            print(f"  - {ip}")
+    except socket.gaierror:
+        print(f"\n[!] Could not resolve: {hostname}")
+    print("\n================================")
+
+def internet_connectivity ():
+
+    print("\n========== INTERNET TEST ==========\n")
+
+    gateway = get_gateway ()
+
+    if gateway:
+        result = subprocess.run(["ping", "-n", "1", gateway], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if result.returncode == 0:
+            print(f"[+] Gateway ({gateway}) : OK")
+        else:
+            print(f"[!] Gateway ({gateway}) : FAILED")
+    else:
+        print("[!] Gateway : NOT FOUND")
+    try:
+        socket.gethostbyname("google.com")
+        print("[+] DNS                  : OK")
+    except socket.gaierror:
+        print("[!] DNS                  : FAILED")
+    result = subprocess.run(["ping", "-n", "1", "8.8.8.8"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if result.returncode == 0:
+        print("[+] Internet             : OK")
+    else:
+        print("[!] Internet             : FAILED")
+    print("\n====================================")
+
 def get_gateway ():
 
     result = subprocess.run (["route", "print", "-4"], capture_output= True, text= True)

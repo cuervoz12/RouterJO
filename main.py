@@ -3,7 +3,7 @@ import socket
 import subprocess
 import re
 from colorama import init, Fore
-from modules.network import get_information_network, get_network, get_gateway
+from modules.network import get_information_network, get_network, get_gateway, ping_test, dns_lookup, internet_connectivity
 from modules.devices import scan_devices
 from modules.ports import scanner_ports
 from modules.router import get_router_information
@@ -98,7 +98,29 @@ def main ():
 
             print("\n================================")
         elif opcion == "3":
-            get_information_network ()
+            while True:
+
+                print("\n========== NETWORK INFORMATION ==========\n")
+
+                print("[1] Network Details")
+                print("[2] Ping Test")
+                print("[3] DNS Lookup")
+                print("[4] Internet Connectivity")
+                print("[0] Back")
+                network_option = input("\nNetwork Information: ")
+                if network_option == "1":
+                    get_information_network()
+                elif network_option == "2":
+                    ip = input("\nEnter IP: ").strip()
+                    ping_test (ip)
+                elif network_option == "3":
+                    dns_lookup ()
+                elif network_option == "4":
+                    internet_connectivity ()
+                elif network_option == "0":
+                    break
+                else:
+                    print("\n[!] Invalid option.")
         elif opcion == "4":
             print("\n[*] Obtaining router information....")
 
