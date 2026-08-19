@@ -3,6 +3,28 @@ import psutil
 import subprocess
 import ipaddress
 
+def network_statistics ():
+
+    print("\n========== NETWORK STATISTICS ==========\n")
+
+    stats = psutil.net_io_counters(pernic= True)
+
+    for interface, data in stats.items():
+
+        if interface == "Loopback Pseudo-Interface 1":
+            continue
+        print(f"Interface : {interface}")
+        print("----------------------------------------")
+        print(f"Bytes Sent       : {data.bytes_sent:,}")
+        print(f"Bytes Received   : {data.bytes_recv:,}")
+        print(f"Packets Sent     : {data.packets_sent:,}")
+        print(f"Packets Received : {data.packets_recv:,}")
+        print(f"Errors Sent      : {data.errout}")
+        print(f"Errors Received  : {data.errin}")
+        print()
+
+    print("========================================")
+
 def ping_test (ip):
 
     print("\n========== PING TEST ==========\n")
